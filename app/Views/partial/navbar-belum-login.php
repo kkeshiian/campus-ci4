@@ -1,4 +1,4 @@
-<div class="navbar bg-base-100 shadow-xl px-10 py-4 items-center flex justify-between">
+<div class="navbar bg-base-100 px-10 py-4 items-center flex justify-between">
   <div class="navbar-start">
     <div class="flex-1">
       <a class="btn btn-ghost normal-case text-xl hover:text-2xl" href="<?= base_url('/auth/login') ?>">CampusEats</a>

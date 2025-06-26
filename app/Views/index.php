@@ -13,6 +13,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
     <script>
         tailwind.config = {plugins: [daisyui]}
@@ -43,7 +45,7 @@
       <div class="flex flex-col justify-center">
         <p class="text-4xl font-bold mb-2">Smart Eating for Smart Students!</p>
         <p>Order fast, pay cashless, and skip the lines.</p>
-        <a href="<?= base_url('pembeli/canteen') ?>" class="btn bg-kuning rounded-lg mt-4">
+        <a href="<?= base_url('pembeli/canteen') ?>" class="btn bg-yellow-500 rounded-lg mt-4">
           Explore Foods!
         </a>
       </div>

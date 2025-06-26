@@ -6,6 +6,8 @@
 
   <!-- Tailwind + DaisyUI CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <script>
     tailwind.config = {
       plugins: [daisyui]
@@ -24,7 +26,7 @@
   <?= view('partial/navbar-auth-page') ?>
 
   <div class="flex justify-center items-center flex-1">
-    <div class="bg-white shadow-md rounded-xl p-8 w-full max-w-md m-4">
+    <div class="bg-white shadow-md border border-black rounded-xl p-8 w-full max-w-md m-4">
       <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
 
       <form method="POST" action="<?= base_url('auth/login') ?>" class="space-y-4" id="loginForm">
@@ -37,16 +39,16 @@
           <input type="password" name="password" class="input input-bordered w-full rounded-lg border py-1.5" />
         </div>
 
-        <button type="submit" class="btn bg-yellow-400 text-black w-full hover:bg-yellow-600 rounded-lg py-1.5">
+        <button type="submit" class="btn bg-yellow-500 text-black w-full hover:bg-yellow-600 rounded-lg py-1.5">
           Login
         </button>
       </form>
 
-      <p class="mt-4 text-center text-sm text-gray-600">
+      <p class="mt-4 text-center text-sm text-gray-500">
         Don't have an account?
         <a href="<?= base_url('auth/register') ?>" class="text-yellow-600 hover:underline">Register</a>
       </p>
-      <p class="mt-4 text-center text-sm text-gray-600">
+      <p class="mt-4 text-center text-sm text-gray-500">
         Forgot your password?
         <a href="<?= base_url('auth/reset-password') ?>" class="text-yellow-600 hover:underline">Reset Password</a>
       </p>

@@ -16,6 +16,8 @@
 
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css" />
     <title>Welcome to CampusEats</title>
@@ -52,7 +54,7 @@
                   </div>
                 </div>
                 <div>
-                  <a href="menu?id_kantin=' . urlencode($kantin["id"]) . '&id_pembeli=' . urlencode($id_per_pembeli) . '" class="btn bg-kuning text-black rounded-lg px-4 py-2 hover:bg-yellow-600 w-full text-center">View Menu</a>
+                  <a href="menu?id_kantin=' . urlencode($kantin["id"]) . '&id_pembeli=' . urlencode($id_per_pembeli) . '" class="btn bg-yellow-500 text-black rounded-lg px-4 py-2 hover:bg-yellow-600 w-full text-center">View Menu</a>
                 </div>
               </div>';
           }
