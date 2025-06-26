@@ -1,4 +1,4 @@
-<footer class="bg-yellow-400 shadow-inner mt-36 text-gray-800">
+<footer class="bg-yellow-500 shadow-inner mt-36 text-gray-800">
   <div class="max-w-6xl mx-auto px-6 py-6 grid grid-cols-1 md:grid-cols-3 gap-6">
     
     <!-- Project Info -->

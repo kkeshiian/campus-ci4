@@ -27,6 +27,7 @@
 
   <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css" />
 </head>
@@ -41,19 +42,19 @@
       <div class="flex items-center gap-4 bg-white border border-black rounded-lg p-4 text-center">
         <div class="mx-auto">
           <h3 class="text-lg font-semibold text-black"><?= esc($nama_fakultas) ?></h3>
-          <p class="text-2xl font-bold text-kuning"><?= esc($nama_kantin) ?></p>
+          <p class="text-2xl font-bold text-yellow-500"><?= esc($nama_kantin) ?></p>
         </div>
       </div>
       <div class="bg-white border border-black rounded-lg p-4 text-center flex items-center">
         <div class="mx-auto">
           <h3 class="text-lg font-semibold">Today's income</h3>
-          <p class="text-2xl font-bold text-kuning">Rp <?= number_format($total_pendapatan ?? 0, 0, ',', '.') ?></p>
+          <p class="text-2xl font-bold text-yellow-500">Rp <?= number_format($total_pendapatan ?? 0, 0, ',', '.') ?></p>
         </div>
       </div>
       <div class="bg-white border border-black rounded-lg p-4 text-center flex items-center">
         <div class="mx-auto">
           <h3 class="text-lg font-semibold">Today's orders</h3>
-          <p class="text-2xl font-bold text-kuning"><?= esc($total_orderan) ?> Orders</p>
+          <p class="text-2xl font-bold text-yellow-500"><?= esc($total_orderan) ?> Orders</p>
         </div>
       </div>
     </div>

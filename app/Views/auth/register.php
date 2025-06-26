@@ -7,6 +7,8 @@
   <script src="https://cdn.jsdelivr.net/npm/daisyui@5.3.1/dist/full.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/notyf/notyf.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <title>Register | CampusEats</title>
 </head>
 
@@ -15,7 +17,7 @@
   <?= view('partial/navbar-auth-page') ?>
 
   <div class="flex justify-center items-center flex-1 mb-10 mt-14">
-    <div class="bg-white shadow-md rounded-2xl p-8 w-full max-w-md">
+    <div class="bg-white shadow-md border border-black rounded-2xl p-8 w-full max-w-md">
       <h2 class="text-2xl font-bold mb-6 text-center">Register</h2>
 
       <form method="POST" action="<?= base_url('auth/register') ?>" class="space-y-4" novalidate>
@@ -45,7 +47,7 @@
           <input type="password" name="konfirmasi_password" class="input input-bordered w-full rounded-lg py-1 border" />
         </div>
 
-        <button type="submit" class="btn bg-yellow-400 text-black w-full hover:bg-yellow-600 rounded-lg py-1.5">Register</button>
+        <button type="submit" class="btn bg-yellow-500 text-black w-full hover:bg-yellow-600 rounded-lg py-1.5">Register</button>
       </form>
 
       <p class="mt-4 text-center text-sm text-gray-600">

@@ -24,6 +24,7 @@
   <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
   
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
   <title>Dashboard Admin - Manage User</title>
 </head>
 <body class="min-h-screen flex flex-col mb-4">
@@ -52,7 +53,7 @@
             <td class="p-2 sm:p-3"><?= esc($row_user['nama']) ?></td>
             <td class="p-2 sm:p-3"><?= esc($row_user['username']) ?></td>
             <td class="p-2 sm:p-3 flex flex-col sm:flex-row justify-center items-center gap-2">
-              <a class="btn btn-sm bg-kuning text-white hover:bg-yellow-600 transition rounded-lg"
+              <a class="btn btn-sm bg-yellow-500 text-white hover:bg-yellow-600 transition rounded-lg"
                  onclick="confirmAuthorization(<?= $row_user['id_user'] ?>)">
                  Authorization
               </a>

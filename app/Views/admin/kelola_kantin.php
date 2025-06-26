@@ -19,6 +19,7 @@
   <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
   
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
   
 
   <title>Kelola Kantin</title>
@@ -28,9 +29,10 @@
     <main class="p-8 w-full">
       <div class="flex items-center justify-between mb-6">
         <h1 class="text-2xl font-bold">Kelola Data Kantin</h1>
-            <a href="<?= base_url('admin/tambahKantin/' . $id_admin) ?>" class="btn btn-primary">
-              + Tambah Kantin
-            </a>
+            <a href="<?= base_url('admin/tambahKantin/' . $id_admin) ?>" class="btn bg-yellow-500 hover:bg-yellow-600 text-white">
+  + Tambah Kantin
+</a>
+
       </div>
 
       <?php if (empty($penjualList)) : ?>
@@ -39,7 +41,7 @@
         <div class="overflow-x-auto">
           <table class="table table-zebra w-full text-sm">
             <thead>
-              <tr class="bg-base-200 text-base">
+              <tr class="bg-yellow-500 text-black">
                 <th>#</th>
                 <th>Nama Penjual</th>
                 <th>Username</th>
@@ -56,10 +58,18 @@
                   <td><?= esc($p['username']) ?></td>
                   <td><?= esc($p['nama_kantin']) ?></td>
                   <td><?= esc($p['nama_fakultas']) ?></td>
-                  <td class="space-x-2">
-                    <button onclick="confirmAuthorization(<?= $p['id_user'] ?>, <?= $id_admin ?>)" class="btn btn-warning btn-sm">Authorize</button>
-                    <button onclick="confirmDelete(<?= $p['id_user'] ?>, <?= $id_admin ?>)" class="btn btn-error btn-sm">Hapus</button>
-                  </td>
+                 <td class="space-x-2">
+  <button onclick="confirmAuthorization(<?= $p['id_user'] ?>, <?= $id_admin ?>)"
+    class="btn bg-yellow-500 hover:bg-yellow-600 text-white btn-sm p-4">
+    Authorize
+  </button>
+
+  <button onclick="confirmDelete(<?= $p['id_user'] ?>, <?= $id_admin ?>)"
+    class="btn bg-red-600 hover:bg-red-700 text-white btn-sm p-4">
+    Hapus
+  </button>
+</td>
+
                 </tr>
               <?php endforeach ?>
             </tbody>

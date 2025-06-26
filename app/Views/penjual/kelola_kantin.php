@@ -13,6 +13,7 @@
   <!-- AOS -->
   <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Notyf -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css" />
@@ -88,7 +89,7 @@
 
           <div class="flex justify-end">
             <button type="submit" name="submit"
-                    class="btn bg-kuning text-white hover:bg-yellow-600 rounded-lg">
+                    class="btn bg-yellow-500 p-4 text-white hover:bg-yellow-600 rounded-lg">
               Save Changes
             </button>
           </div>

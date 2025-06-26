@@ -34,7 +34,7 @@
         <p class='text-base mx-auto m-4 text-center text-gray-500'>No order history yet.</p>
       <?php else : ?>
         <table class='table w-full'>
-          <thead class='bg-yellow-200 text-white'>
+          <thead class='bg-yellow-500 text-white'>
             <tr>
               <th>No</th>
               <th>Order ID</th>

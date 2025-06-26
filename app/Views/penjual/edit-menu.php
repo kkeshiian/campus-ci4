@@ -69,7 +69,7 @@
 
         <!-- Tombol Simpan -->
         <div class="flex justify-end">
-          <button type="submit" class="btn bg-kuning text-white hover:bg-yellow-600">
+          <button type="submit" class="btn bg-yellow-500 text-white hover:bg-yellow-600">
             Save Changes
           </button>
         </div>

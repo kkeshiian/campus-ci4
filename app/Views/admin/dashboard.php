@@ -25,7 +25,7 @@
   <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
   
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css" />
-
+<script src="https://cdn.tailwindcss.com"></script>
   <title>Dashboard Admin</title>
 </head>
 <body class="min-h-screen flex flex-col mb-4">
@@ -46,7 +46,7 @@
             Role: <span class="font-medium"><?= esc($row_admin['jabatan'] ?? '-') ?></span>
           </p>
           <a href="<?= base_url('/admin/profile') ?>">
-            <button class="btn bg-kuning hover:bg-yellow-600 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition duration-300 ease-in-out w-full" type="button">
+            <button class="btn bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition duration-300 ease-in-out w-full" type="button">
               Edit Profile
             </button>
           </a>
