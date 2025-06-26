@@ -266,17 +266,53 @@ class PenjualController extends BaseController
         $newStatus = $request->getPost('status');
 
         if (!$orderId || !$menu || !$newStatus) {
-            return redirect()->back()->with('error', 'Invalid request.');
+            return redirect()->back()->with('error', 'Permintaan tidak valid.');
         }
 
         $riwayatModel = new \App\Models\RiwayatPembelianModel();
-        $riwayatModel->where([
-            'order_id' => $orderId,
-            'menu' => $menu
-        ])->set(['status' => $newStatus])->update();
 
-        return redirect()->back()->with('success', 'Order status updated.');
+        // Cek apakah data ada
+        $data = $riwayatModel->where([
+            'order_id' => $orderId,
+            'menu'     => $menu
+        ])->first();
+
+        if (!$data) {
+            return redirect()->back()->with('error', 'Data pesanan tidak ditemukan.');
+        }
+
+        // Update status pesanan
+        $updateStatus = ['status' => $newStatus];
+        $riwayatModel->update(
+            ['order_id' => $orderId, 'menu' => $menu],
+            $updateStatus
+        );
+
+        // Tentukan status pembayaran berdasarkan tipe dan status
+        $newPaymentStatus = null;
+        if ($data['tipe'] === 'cashless') {
+            $newPaymentStatus = 'paid';
+        } elseif ($data['tipe'] === 'cash') {
+            if (strtolower($newStatus) === 'done') {
+                $newPaymentStatus = 'paid';
+            } else {
+                $newPaymentStatus = 'pending';
+            }
+        }
+
+        // Update status_pembayaran jika ada perubahan
+        if (!empty($newPaymentStatus)) {
+            $riwayatModel->update(
+                ['order_id' => $orderId, 'menu' => $menu],
+                ['status_pembayaran' => $newPaymentStatus]
+            );
+        }
+
+        return redirect()->back()->with('success', 'Status pesanan berhasil diperbarui.');
     }
+
+
+
     public function tambahMenu()
     {
         $session = session();

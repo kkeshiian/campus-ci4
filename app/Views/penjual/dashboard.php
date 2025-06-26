@@ -81,6 +81,7 @@
               </div>
 
               <form method="post" action="<?= base_url('/penjual/update-status') ?>" class="form-konfirmasi-status w-full md:w-64">
+                <?= csrf_field() ?>
                 <input type="hidden" name="id" value="<?= esc($pesanan["order_id"]) ?>">
                 <input type="hidden" name="menu" value="<?= esc($pesanan["menu"]) ?>">
                 <fieldset class="mb-2">

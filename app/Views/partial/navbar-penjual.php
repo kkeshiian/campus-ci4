@@ -35,7 +35,7 @@ $activePage = isset($activePage) ? $activePage : '';
 
   <div class="navbar-end flex items-center gap-4 z-10">
     <!-- Tombol Logout -->
-    <button id="logoutBtn" class="bg-kuning text-white p-2 px-4 rounded hover:bg-yellow-600 transition">
+    <button id="logoutBtn" class="bg-yellow-500 text-white p-2 px-4 rounded hover:bg-yellow-600 transition">
       Logout
     </button>
   </div>
@@ -56,7 +56,7 @@ $activePage = isset($activePage) ? $activePage : '';
       cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result.isConfirmed) {
-        window.location.href = "/campuseats/pages/auth/logout.php";
+        window.location.href = "/penjual/logout/";
       }
     });
   });

@@ -9,7 +9,7 @@ class RiwayatPembelianModel extends Model
     protected $table            = 'riwayat_pembelian';
     protected $primaryKey       = 'order_id';
     protected $allowedFields    = [
-        'order_id', 'id_pembeli', 'total', 'tanggal',
+        'order_id', 'id_pembeli', 'total', 'tanggal','status_pembayaran',
         'status', 'bukti_pembayaran'
     ];
 
