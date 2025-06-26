@@ -267,7 +267,7 @@
         id_pembeli: idPembeli,
         cart: formattedCart,
         tipe: "cash",
-        status_pembayaran: "unpaid"
+        status_pembayaran: "pending"
       })
     })
     .then(res => res.json())

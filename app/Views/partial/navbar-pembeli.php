@@ -58,7 +58,7 @@ $activePage = isset($activePage) ? $activePage : '';
       cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result.isConfirmed) {
-        window.location.href = "/pembeli/logout";
+        window.location.href = "/pembeli/logout/";
       }
     });
   });

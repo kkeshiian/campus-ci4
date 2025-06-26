@@ -74,7 +74,7 @@ data-aos="fade-down" data-aos-duration="1000">
             ?>
             <div class="flex flex-col justify-between bg-white rounded-lg shadow-lg border border-black">
                 <div class="p-4">
-                    <img src="/campuseats/<?= $gambar ?>" alt="<?= $nama ?>" class="rounded-t-lg w-full h-48 object-cover mb-1" />
+                    <img src="/campuseats/public/../../<?= htmlspecialchars($gambar) ?>" alt="<?= $nama ?>" class="rounded-t-lg w-full h-48 object-cover mb-1" />
                     <div>
                         <h2 class="text-xl font-semibold"><?= $nama ?></h2>
                         <p class="text-gray-600">Rp <?= number_format($harga, 0, ',', '.') ?></p>
