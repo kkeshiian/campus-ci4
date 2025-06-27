@@ -8,10 +8,11 @@ class RiwayatPembelianModel extends Model
 {
     protected $table            = 'riwayat_pembelian';
     protected $primaryKey       = 'order_id';
-    protected $allowedFields    = [
-        'order_id', 'id_pembeli', 'total', 'tanggal','status_pembayaran',
-        'status', 'bukti_pembayaran'
+    protected $allowedFields = [
+        'id_user', 'id_kantin', 'order_id', 'status',
+        'status_pembayaran', 'total', 'tanggal','nama_kantin', 'tipe', 'menu',
     ];
+
 
     // ✅ Simpan pesanan awal (digunakan sebelum midtrans token)
     public function buatPesanan($data)

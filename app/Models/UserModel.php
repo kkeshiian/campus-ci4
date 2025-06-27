@@ -130,4 +130,9 @@ class UserModel extends Model
         $this->insert($data);
         return $this->insertID();
     }
+    public function getUserByEmail($email)
+    {
+        return $this->where('email', $email)->first();
+    }
+
 }

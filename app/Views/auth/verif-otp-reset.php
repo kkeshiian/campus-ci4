@@ -23,7 +23,7 @@
     <div class="bg-white shadow-md rounded-xl p-8 w-full max-w-xl m-4">
       <h2 class="text-2xl font-bold mb-2 text-center">Verification OTP Code</h2>
       <h5 class="text-lg mb-6 text-center">We have sent an OTP code to your email. Please check your inbox and enter the code below.</h5>
-    <form method="POST" class="space-y-6" id="otpForm" action="<?= base_url('auth/verif-otp') ?>">
+    <form method="POST" class="space-y-6" id="otpForm" action="<?= base_url('auth/verif-otp-reset') ?>">
         <h3 class="text-2xl font-bold text-center">OTP Code</h3>
 
     <div class="w-full flex justify-center">
@@ -47,7 +47,7 @@
     </form>
     <p class="mt-4 text-center text-sm text-gray-600">
         Did not receive the code?
-        <a href="/auth/verif-otp-resend/" class="text-yellow-600 hover:underline">Resend OTP</a>
+        <a href="/auth/verif-otp-reset-resend?resend=true" class="text-yellow-600 hover:underline">Resend OTP</a>
     </p>
     </div>
   </div>
