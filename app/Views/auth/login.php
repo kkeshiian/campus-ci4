@@ -23,7 +23,7 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
-  <?= view('partial/navbar-auth-page') ?>
+  <?= view('partial/navbar-belum-login') ?>
 
   <div class="flex justify-center items-center flex-1">
     <div class="bg-white shadow-md border border-black rounded-xl p-8 w-full max-w-md m-4">
@@ -50,7 +50,7 @@
       </p>
       <p class="mt-4 text-center text-sm text-gray-500">
         Forgot your password?
-        <a href="<?= base_url('auth/reset-password') ?>" class="text-yellow-600 hover:underline">Reset Password</a>
+        <a href="<?= base_url('/auth/forgot-password/') ?>" class="text-yellow-600 hover:underline">Reset Password</a>
       </p>
     </div>
   </div>

@@ -20,6 +20,7 @@ class AuthController extends BaseController
         $this->session    = session();
         $this->userModel  = new UserModel();
         $this->otpModel   = new OtpVerificationModel();
+        $this->mailService = new MailService();
     }
 
     // GET /auth/login
@@ -202,6 +203,7 @@ class AuthController extends BaseController
     public function verifOtp()
     {
         $id_user = $this->session->get('id_user_pending');
+        session()->set('id_user_pending', $id_user);
 
         if ($this->request->getMethod() === 'get') {
             return view('auth/verif-otp', ['id_user' => $id_user]);
@@ -210,7 +212,7 @@ class AuthController extends BaseController
         $otp = $this->request->getPost('otp');
 
         if (empty($otp)) {
-            return redirect()->back()->with('error', 'OTP tidak boleh kosong');
+            return redirect()->back()->with('error', 'OTP is not allowed to empty');
         }
 
         $otpValid = $this->otpModel->verifyOtp($otp, $id_user);
@@ -235,9 +237,9 @@ class AuthController extends BaseController
             }
 
             $this->session->remove('id_user_pending');
-            return redirect()->to('/auth/login')->with('success', 'Verifikasi berhasil. Silakan login.');
+            return redirect()->to('/auth/login')->with('success', 'Verifikasi is succesfullt. Please login.');
         } else {
-            return redirect()->back()->with('error', 'OTP tidak valid atau sudah kadaluarsa');
+            return redirect()->back()->with('error', 'OTP code is note valid or already expired');
         }
     }
 
@@ -249,4 +251,192 @@ class AuthController extends BaseController
         $this->session->destroy();
         return redirect()->to('/auth/login');
     }
+    
+    public function resendRegisterOtp()
+    {
+        $id_user = $this->session->get('id_user_pending') ?? $this->request->getPost('user_id');
+
+        if (!$id_user) {
+            return redirect()->back()->with('error', 'No active registration verification request.');
+        }
+
+        $user = $this->userModel->find($id_user);
+        if (!$user) {
+            return redirect()->back()->with('error', 'User not found.');
+        }
+
+        // Generate dan simpan OTP baru
+        $newOtpCode = $this->otpModel->generateOTP();
+        $this->otpModel->invalidateOldOtp($id_user); // Invalidate OTP lama
+        $this->otpModel->saveOtp($id_user, $newOtpCode, date('Y-m-d H:i:s', strtotime('+5 minutes')));
+
+        // Kirim email OTP baru
+        if ($this->mailService->sendOtpVerification($user['email'], $user['nama'], $newOtpCode)) {
+            return redirect()->back()->with('success', 'New OTP has been sent to your email.');
+        } else {
+            log_message('error', 'Failed to resend registration OTP email for user ID: ' . $id_user);
+            return redirect()->back()->with('error', 'Failed to resend OTP. Please try again later.');
+        }
+    }
+
+
+    // --- Fitur Reset Password ---
+
+    // GET /auth/forgot-password (Tampilkan form lupa password)
+    public function forgotPassword()
+    {
+        return view('auth/input_email');
+    }
+
+    // POST /auth/send-reset-link (Proses permintaan lupa password, kirim OTP)
+    public function sendResetLink()
+    {
+        $rules = [
+            'email' => 'required|valid_email',
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        $email = $this->request->getPost('email');
+        $user = $this->userModel->getUserByEmail($email);
+
+        if (!$user) {
+            // Pesan umum untuk keamanan agar tidak memberitahu apakah email ada atau tidak
+            return redirect()->back()->with('success', 'If your email is in our system, a password reset OTP has been sent.');
+        }
+
+        // Generate dan simpan OTP untuk reset password
+        $otpCode = $this->otpModel->generateOTP();
+        $this->otpModel->invalidateOldOtp($user['id_user']); // Invalidate OTP lama untuk user ini
+        $this->otpModel->saveOtp($user['id_user'], $otpCode, date('Y-m-d H:i:s', strtotime('+5 minutes')));
+
+        // Kirim email OTP reset password
+        if ($this->mailService->sendOtpResetPassword($user['email'], $user['nama'], $otpCode)) {
+            // Simpan ID user di sesi untuk verifikasi OTP reset password
+            $this->session->set('id_user_pending_reset_password', $user['id_user']);
+            return redirect()->to(base_url('auth/verif-otp-reset'))->with('success', 'Password reset OTP has been sent to your email.');
+        } else {
+            log_message('error', 'Failed to send password reset OTP email for user ID: ' . $user['id_user']);
+            return redirect()->back()->withInput()->with('error', 'Failed to send password reset OTP. Please try again later.');
+        }
+    }
+
+    public function resetPasswordPages(){
+        return view('auth/reset_password'); 
+    }
+
+    // GET & POST /auth/verif-otp-reset (Verifikasi OTP untuk reset password)
+    public function verifOtpReset()
+    {
+        $id_user = $this->session->get('id_user_pending_reset_password');
+
+        if (!$id_user) {
+            return redirect()->to(base_url('auth/forgot-password'))->with('error', 'Please request a password reset first.');
+        }
+
+        // Tampilkan form jika request GET
+        if ($this->request->getMethod() === 'get') {
+            return view('auth/verif-otp-reset', ['id_user' => $id_user]);
+        }
+
+        // Proses verifikasi OTP jika request POST
+        $otp = $this->request->getPost('otp');
+
+        if (empty($otp)) {
+            return redirect()->back()->withInput()->with('error', 'Please enter the OTP code.');
+        }
+
+        $otpRecord = $this->otpModel->verifyOtp($otp, $id_user);
+        session()->set('reset_user_id', $otpRecord['id_user']);
+
+        if ($otpRecord) {
+            $this->otpModel->markOtpUsedById($otpRecord['id']); // Mark OTP as usedl
+
+            // Hapus sesi OTP pending reset password
+            $this->session->remove('id_user_pending_reset_password');
+
+            // Redirect ke form reset password dengan token
+            return redirect()->to(base_url('auth/reset-password/'))->with('success', 'OTP verified. Please set your new password.');
+        } else {
+            return redirect()->back()->withInput()->with('error', 'Incorrect or expired OTP Code!');
+        }
+    }
+
+    // POST /auth/resend-otp-reset (Resend OTP untuk reset password)
+    public function resendOtpReset()
+    {
+        $id_user = $this->session->get('id_user_pending_reset_password') ?? $this->request->getPost('user_id');
+
+        if (!$id_user) {
+            return redirect()->back()->with('error', 'No active password reset request.');
+        }
+
+        $user = $this->userModel->find($id_user);
+        if (!$user) {
+            return redirect()->back()->with('error', 'User not found.');
+        }
+
+        // Generate dan simpan OTP baru
+        $newOtpCode = $this->otpModel->generateOTP();
+        $this->otpModel->invalidateOldOtp($id_user); // Invalidate OTP lama
+        $this->otpModel->saveOtp($id_user, $newOtpCode, date('Y-m-d H:i:s', strtotime('+5 minutes')));
+
+        // Kirim email OTP baru untuk reset password
+        if ($this->mailService->sendOtpResetPassword($user['email'], $user['nama'], $newOtpCode)) {
+            return redirect()->back()->with('success', 'New OTP has been sent to your email.');
+        } else {
+            log_message('error', 'Failed to resend password reset OTP email for user ID: ' . $id_user);
+            return redirect()->back()->with('error', 'Failed to resend OTP. Please try again later.');
+        }
+    }
+
+
+    // GET & POST /auth/reset-password/{token} (Tampilkan dan proses form reset password)
+    public function resetPassword()
+    {
+        // Tampilkan form saat GET
+        if ($this->request->getMethod() === 'get') {
+            return view('auth/reset_password');
+        }
+
+        // Validasi input
+        $rules = [
+            'password' => 'required|min_length[8]|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/]',
+            'konfirmasi_password' => 'required|matches[password]',
+        ];
+
+        $messages = [
+            'password' => [
+                'regex_match' => 'Password harus mengandung huruf besar, kecil, angka, dan karakter khusus.'
+            ],
+            'konfirmasi_password' => [
+                'matches' => 'Konfirmasi password tidak cocok.'
+            ]
+        ];
+
+        if (!$this->validate($rules, $messages)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        // Ambil user dari session
+        $id_user = session()->get('reset_user_id'); // pastikan ini sudah diset setelah verif OTP
+
+        if (!$id_user) {
+            return redirect()->to(base_url('auth/forgot-password'))->with('error', 'Sesi reset tidak valid.');
+        }
+
+        $newPassword = $this->request->getPost('password');
+
+        // Ganti password
+        if ($this->userModel->changePassword($id_user, $newPassword)) {
+            // Clear session dan redirect
+            session()->remove('reset_user_id');
+            return redirect()->to(base_url('auth/login'))->with('success', 'Password berhasil direset. Silakan login.');
+        } else {
+            return redirect()->back()->withInput()->with('error', 'Gagal mereset password. Silakan coba lagi.');
+        }
+    }
+
 }

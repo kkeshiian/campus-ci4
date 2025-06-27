@@ -74,6 +74,8 @@ $routes->match(['get', 'post'], 'auth/verif-otp', 'AuthController::verifOtp');
 $routes->get('/pembeli/menu', 'PembeliController::menu');
 $routes->get('/pembeli/logout/', 'AuthController::logout');
 $routes->get('/penjual/logout/', 'AuthController::logout');
+$routes->get('/admin/logout/', 'AuthController::logout');
+
 $routes->get('/pembeli/cart', 'PembeliController::cart');
 $routes->post('/midtrans/getToken', 'Midtrans::getToken');
 $routes->post('/midtrans/callback', 'Midtrans::callback');
@@ -97,3 +99,20 @@ $routes->get('admin/hapusPembeli/(:num)/(:num)', 'AdminController::hapusPembeli/
 
 $routes->match(['get', 'post'], 'admin/editDataPenjual/(:num)/(:num)', 'AdminController::editDataPenjual/$1/$2');
 $routes->match(['get', 'post'], 'admin/hapusKantin/(:num)/(:num)', 'AdminController::hapusKantin/$1/$2');
+
+$routes->get('invoice/download/(:segment)', 'PembeliController::downloadInvoice/$1');
+$routes->get('pembeli/invoice-pdf/(:segment)', 'PembeliController::invoicePdf/$1');
+
+
+$routes->get('/auth/reset-password/', 'AuthController::resetPasswordPages');
+$routes->get('/auth/reset-password/', 'AuthController::resetPassword');
+$routes->post('/auth/reset-password/', 'AuthController::resetPassword');
+$routes->get('/auth/forgot-password/', 'AuthController::forgotPassword');
+$routes->post('/auth/send-reset-link', 'AuthController::sendResetLink');
+$routes->get('/auth/input_email', 'AuthController::sendResetLink');
+$routes->get('/auth/verif-otp-reset', 'AuthController::verifOtpReset');
+$routes->get('/auth/verif-otp', 'AuthController::verifOtp');
+$routes->get('/auth/verif-otp-reset-resend', 'AuthController::resendOtpReset');
+$routes->get('/auth/verif-otp-resend/', 'AuthController::resendRegisterOtp');
+$routes->post('/auth/verif-otp-reset', 'AuthController::verifOtpReset');
+$routes->post('/auth/verif-otp', 'AuthController::verifOtp');

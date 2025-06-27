@@ -22,6 +22,7 @@
   <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
   
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css" />
+  <title>History | CampusEats</title>
 
 </head>
 <body class="min-h-screen flex flex-col">
@@ -43,7 +44,7 @@
               <th>Quantity</th>
               <th>Price</th>
               <th>Total</th>
-              <th>Status</th>
+              <th>Payment Status</th>
               <th>Method</th>
               <th>Status</th>
               <th>Date & Time</th>
@@ -53,13 +54,20 @@
             <?php $no = 1; foreach ($riwayat as $item) : ?>
               <tr>
                 <td><?= $no++ ?></td>
-                <td><?= esc($item['order_id']) ?></td>
+                <td>
+                  <?= esc($item['order_id']) ?>
+                  <?php if ($item['status_pembayaran'] === 'paid'): ?>
+                      <a href="<?= base_url('pembeli/invoice-pdf/' . $item['order_id']) ?>" class="btn btn-sm btn-primary">
+                          Download Invoice
+                      </a>
+                  <?php endif; ?>
+                </td>
                 <td><?= esc($item['nama_kantin']) ?></td>
                 <td><?= esc($item['menu']) ?></td>
                 <td><?= esc($item['quantity']) ?></td>
                 <td><?= esc($item['harga']) ?></td>
                 <td><?= esc($item['total']) ?></td>
-                <td><?= esc($item['status']) ?></td>
+                <td><?= esc($item['status_pembayaran']) ?></td>
                 <td><?= esc($item['tipe']) ?></td>
                 <td><?= esc($item['status']) ?></td>
                 <td><?= esc($item['tanggal']) ?></td>

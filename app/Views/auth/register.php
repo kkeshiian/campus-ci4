@@ -14,7 +14,7 @@
 
 <body class="min-h-screen flex flex-col relative">
   
-  <?= view('partial/navbar-auth-page') ?>
+  <?= view('partial/navbar-belum-login') ?>
 
   <div class="flex justify-center items-center flex-1 mb-10 mt-14">
     <div class="bg-white shadow-md border border-black rounded-2xl p-8 w-full max-w-md">

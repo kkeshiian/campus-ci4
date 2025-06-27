@@ -3,7 +3,13 @@ namespace App\Controllers;
 
 use App\Models\PenjualModel;      
 use App\Models\FakultasModel;    
-use App\Models\RiwayatPembelianModel;    
+use App\Models\RiwayatPembelianModel;  
+
+use App\Models\UserModel;
+use App\Models\PembeliModel;
+use App\Models\IsDoneModel;
+
+use App\Libraries\Fonnte;  
 use CodeIgniter\Controller;
 
 class PenjualController extends BaseController
@@ -258,60 +264,95 @@ class PenjualController extends BaseController
     {
         return view('penjual/report_problem');
     }
+
     public function updateStatusPesanan()
     {
-        $request = $this->request;
-        $orderId = $request->getPost('id');
-        $menu = $request->getPost('menu');
-        $newStatus = $request->getPost('status');
+        $order_id = $this->request->getPost('order_id');
+        $status = $this->request->getPost('status');
+        $menu = $this->request->getPost('menu');
 
-        if (!$orderId || !$menu || !$newStatus) {
-            return redirect()->back()->with('error', 'Permintaan tidak valid.');
+        $riwayatModel = new RiwayatPembelianModel();
+        $userModel = new UserModel();
+        $pembeliModel = new PembeliModel();
+        $isDoneModel = new IsDoneModel();
+        $penjualModel = new PenjualModel();
+
+        $riwayatModel->where('order_id', $order_id)
+                    ->where('menu', $menu)
+                    ->set(['status' => $status, 'tanggal' => date('Y-m-d H:i:s')])
+                    ->update();
+
+        if ($status === 'Done') {
+            $riwayatModel->where('order_id', $order_id)
+                        ->where('menu', $menu)
+                        ->set('status_pembayaran', 'paid')
+                        ->update();
         }
 
-        $riwayatModel = new \App\Models\RiwayatPembelianModel();
 
-        // Cek apakah data ada
-        $data = $riwayatModel->where([
-            'order_id' => $orderId,
-            'menu'     => $menu
-        ])->first();
+            if (in_array($status, ['Ready to Pickup', 'Done'])) {
+                $dataPembelian = $riwayatModel
+                    ->where('order_id', $order_id)
+                    ->where('menu', $menu)
+                    ->first();
 
-        if (!$data) {
-            return redirect()->back()->with('error', 'Data pesanan tidak ditemukan.');
-        }
+                $id_pembeli = $dataPembelian['id_pembeli'] ?? null;
 
-        // Update status pesanan
-        $updateStatus = ['status' => $newStatus];
-        $riwayatModel->update(
-            ['order_id' => $orderId, 'menu' => $menu],
-            $updateStatus
-        );
+                if ($id_pembeli) {
+                    $pembeli = $pembeliModel->find($id_pembeli);
+                    $user = $userModel->find($pembeli['id_user']);
+                    $penjual = $penjualModel->find(session()->get('id_penjual'));
 
-        // Tentukan status pembayaran berdasarkan tipe dan status
-        $newPaymentStatus = null;
-        if ($data['tipe'] === 'cashless') {
-            $newPaymentStatus = 'paid';
-        } elseif ($data['tipe'] === 'cash') {
-            if (strtolower($newStatus) === 'done') {
-                $newPaymentStatus = 'paid';
-            } else {
-                $newPaymentStatus = 'pending';
+                    $id_user = $user['id_user'];
+                    $nomor_wa = $user['nomor_wa'];
+                    $nama = $user['nama'] ?? 'Customer';
+                    $nama_kantin = $penjual->nama_kantin ?? 'Kantin Kami';
+
+
+                    // Cek apakah sudah dikirim
+                    $sudahDikirim = $isDoneModel->where([
+                        'order_id' => $order_id,
+                        'menu' => $menu,
+                        'is_sent' => 1
+                    ])->first();
+
+                    if (!$sudahDikirim) {
+                        // Simpan entri baru di is_done
+                        $isDoneModel->save([
+                            'id_user' => $id_user,
+                            'id_penjual' => session()->get('id_penjual'),
+                            'nomor_wa' => $nomor_wa,
+                            'menu' => $menu,
+                            'order_id' => $order_id,
+                            'tanggal' => date('Y-m-d H:i:s'),
+                            'is_sent' => 0
+                        ]);
+
+                        // Kirim notifikasi
+                        $fonnte = new \App\Libraries\Fonnte();
+                        $pesan = "🍽️ *Makananmu Telah Siap!*\n";
+                        $pesan .= "Order ID: *$order_id*\n";
+                        $pesan .= "============================================\n\n";
+                        $pesan .= "Halo $nama,\n";
+                        $pesan .= "Pesanan Anda untuk menu *$menu* di Kantin *$nama_kantin* telah selesai dan siap untuk diambil.\n\n";
+                        $pesan .= "Terima kasih telah menjadi sahabat setia Campuseats! 🙌";
+
+                        $fonnte->send($nomor_wa, $pesan);
+
+                        // Update is_sent
+                        $isDoneModel->where([
+                            'order_id' => $order_id,
+                            'menu' => $menu,
+                            'is_sent' => 0
+                        ])->set('is_sent', 1)->update();
+                    }
+                }
             }
-        }
 
-        // Update status_pembayaran jika ada perubahan
-        if (!empty($newPaymentStatus)) {
-            $riwayatModel->update(
-                ['order_id' => $orderId, 'menu' => $menu],
-                ['status_pembayaran' => $newPaymentStatus]
-            );
-        }
 
-        return redirect()->back()->with('success', 'Status pesanan berhasil diperbarui.');
+        return redirect()->back()->with('success', 'Status berhasil diperbarui.');
     }
-
-
+    
 
     public function tambahMenu()
     {

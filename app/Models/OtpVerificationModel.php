@@ -70,7 +70,6 @@ class OtpVerificationModel extends Model
                     ->first();
     }
 
-    // ✅ Tandai OTP sebagai sudah digunakan
     public function markOtpUsedById($id)
     {
         return $this->update($id, ['is_used' => 1]);

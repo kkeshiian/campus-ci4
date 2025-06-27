@@ -15,9 +15,9 @@ $activePage = isset($activePage) ? $activePage : '';
         </svg>
       </div>
       <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow">
-        <li><a href="/admin/dashboard" class="<?= ($activePage == 'dashboard') ? 'underline decoration-kuning decoration-1 underline-offset-4' : '' ?>">Dashboard</a></li>
-        <li><a href="/admin/kelola-pengguna" class="<?= ($activePage == 'kelola_pengguna') ? 'underline decoration-kuning decoration-1 underline-offset-4' : '' ?>">Manage User</a></li>
-        <li><a href="/admin/kelola-kantin" class="<?= ($activePage == 'kelola_kantin') ? 'underline decoration-kuning decoration-1 underline-offset-4' : '' ?>">Manage Canteen</a></li>
+        <li><a href="/admin/dashboard" class="<?= ($activePage == 'dashboard') ? 'underline decoration-yellow-500 decoration-1 underline-offset-4' : '' ?>">Dashboard</a></li>
+        <li><a href="/admin/kelola-pengguna" class="<?= ($activePage == 'kelola_pengguna') ? 'underline decoration-yellow-500 decoration-1 underline-offset-4' : '' ?>">Manage User</a></li>
+        <li><a href="/admin/kelola-kantin" class="<?= ($activePage == 'kelola_kantin') ? 'underline decoration-yellow-500 decoration-1 underline-offset-4' : '' ?>">Manage Canteen</a></li>
       </ul>
     </div>
     <a class="btn btn-ghost normal-case text-xl">CampusEats</a>
@@ -26,14 +26,14 @@ $activePage = isset($activePage) ? $activePage : '';
   <!-- Menu horizontal hanya tampil di desktop -->
   <div class="navbar-center hidden lg:flex items-center gap-4 z-10">
     <ul class="menu menu-horizontal px-1">
-        <li><a href="/admin/dashboard" class="<?= ($activePage == 'dashboard') ? 'underline decoration-kuning decoration-1 underline-offset-4' : '' ?>">Dashboard</a></li>
-        <li><a href="/admin/kelola-pengguna" class="<?= ($activePage == 'kelola_pengguna') ? 'underline decoration-kuning decoration-1 underline-offset-4' : '' ?>">Manage User</a></li>
-        <li><a href="/admin/kelola-kantin" class="<?= ($activePage == 'kelola_kantin') ? 'underline decoration-kuning decoration-1 underline-offset-4' : '' ?>">Manage Canteen</a></li>
+        <li><a href="/admin/dashboard" class="<?= ($activePage == 'dashboard') ? 'underline decoration-yellow-500 decoration-1 underline-offset-4' : '' ?>">Dashboard</a></li>
+        <li><a href="/admin/kelola-pengguna" class="<?= ($activePage == 'kelola_pengguna') ? 'underline decoration-yellow-500 decoration-1 underline-offset-4' : '' ?>">Manage User</a></li>
+        <li><a href="/admin/kelola-kantin" class="<?= ($activePage == 'kelola_kantin') ? 'underline decoration-yellow-500 decoration-1 underline-offset-4' : '' ?>">Manage Canteen</a></li>
     </ul>
   </div>
 
   <div class="navbar-end flex items-center gap-4 z-10">
-    <a id="logoutBtn" href="/campuseats/pages/auth/logout.php" class="bg-kuning text-white p-2 px-4 rounded hover:bg-yellow-600 transition">
+    <a id="logoutBtn" href="/admin/logout/" class="bg-yellow-500 text-white p-2 px-4 rounded hover:bg-yellow-600 transition">
       Logout
     </a>
   </div>
@@ -53,7 +53,7 @@ $activePage = isset($activePage) ? $activePage : '';
       cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result.isConfirmed) {
-        window.location.href = "/campuseats/pages/auth/logout.php";
+        window.location.href = "/admin/logout/";
       }
     });
   });
