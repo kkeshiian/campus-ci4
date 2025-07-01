@@ -9,7 +9,7 @@ class PenjualModel extends Model
     protected $table            = 'penjual';
     protected $primaryKey       = 'id_penjual';
     protected $allowedFields    = [
-        'id_user', 'id_fakultas', 'nama', 'nama_kantin', 'gambar', 'link'
+        'id_user', 'id_fakultas', 'nama_kantin', 'gambar', 'link'
     ];
 
     // ✅ Tambah penjual (setelah register dan verifikasi)

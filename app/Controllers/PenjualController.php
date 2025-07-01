@@ -4,10 +4,9 @@ namespace App\Controllers;
 use App\Models\PenjualModel;      
 use App\Models\FakultasModel;    
 use App\Models\RiwayatPembelianModel;  
-
 use App\Models\UserModel;
-use App\Models\PembeliModel;
 use App\Models\IsDoneModel;
+use App\Models\PembeliModel;
 
 use App\Libraries\Fonnte;  
 use CodeIgniter\Controller;
@@ -16,53 +15,54 @@ class PenjualController extends BaseController
 {
     public function dashboard()
     {
-            $session = session();
-            $id_penjual = $session->get('id_penjual');
+        $session = session();
+        $id_penjual = $session->get('id_penjual');
 
-            $penjualModel = new PenjualModel();
-            $penjual = $penjualModel->find($id_penjual);
+        $penjualModel = new PenjualModel();
+        $penjual = $penjualModel->find($id_penjual);
 
-            $fakultasModel = new FakultasModel();
-            $fakultas = $fakultasModel->find($penjual['id_fakultas']);
+        $userModel = new UserModel();
+        $user = $userModel->find($penjual['id_user']);
 
-            $nama_kantin = $penjual['nama_kantin'];
-            $tanggal_hari_ini = date('Y-m-d');
+        $fakultasModel = new FakultasModel();
+        $fakultas = $fakultasModel->find($penjual['id_fakultas']);
 
-            $riwayatModel = new RiwayatPembelianModel();
-            $semuaPesanan = $riwayatModel
-                ->where('nama_kantin', $nama_kantin)
-                ->orderBy('tanggal', 'DESC')
-                ->findAll();
+        $nama_kantin = $penjual['nama_kantin'];
+        $tanggal_hari_ini = date('Y-m-d');
 
-            $daftar_pesanan_hari_ini = [];
-            $total_keseluruhan = 0;
-            $total_orderan = 0;
+        $riwayatModel = new RiwayatPembelianModel();
+        $semuaPesanan = $riwayatModel
+            ->where('nama_kantin', $nama_kantin)
+            ->orderBy('tanggal', 'DESC')
+            ->findAll();
 
-            foreach ($semuaPesanan as $pesanan) {
-                if (date('Y-m-d', strtotime($pesanan['tanggal'])) === $tanggal_hari_ini) {
-                    $daftar_pesanan_hari_ini[] = $pesanan;
-                    $total_keseluruhan += $pesanan['total'];
-                    $total_orderan += $pesanan['quantity'];
-                }
+        $daftar_pesanan_hari_ini = [];
+        $total_keseluruhan = 0;
+        $total_orderan = 0;
+
+        foreach ($semuaPesanan as $pesanan) {
+            if (date('Y-m-d', strtotime($pesanan['tanggal'])) === $tanggal_hari_ini) {
+                $daftar_pesanan_hari_ini[] = $pesanan;
+                $total_keseluruhan += $pesanan['total'];
+                $total_orderan += $pesanan['quantity'];
             }
+        }
 
-            // 3. Pendapatan 7 hari terakhir
-            $mingguan = $riwayatModel->select('SUM(quantity) AS qty, SUM(total) AS total')
-                ->where('nama_kantin', $nama_kantin)
-                ->where('status', 'Done')
-                ->where('tanggal >=', date('Y-m-d', strtotime('-6 days')))
-                ->first();
+        $mingguan = $riwayatModel->select('SUM(quantity) AS qty, SUM(total) AS total')
+            ->where('nama_kantin', $nama_kantin)
+            ->where('status', 'Done')
+            ->where('tanggal >=', date('Y-m-d', strtotime('-6 days')))
+            ->first();
 
-            return view('penjual/dashboard', [
-                'id_penjual' => $id_penjual,
-                'nama_kantin' => $nama_kantin,
-                'nama_fakultas' => $fakultas['nama_fakultas'],
-                'riwayat' => $daftar_pesanan_hari_ini,
-                'total_orderan' => $total_orderan,
-                'total_pendapatan' => $mingguan['total'] ?? 0,
-            ]);
+        return view('penjual/dashboard', [
+            'id_penjual' => $id_penjual,
+            'nama_kantin' => $nama_kantin,
+            'nama_fakultas' => $fakultas['nama_fakultas'],
+            'riwayat' => $daftar_pesanan_hari_ini,
+            'total_orderan' => $total_orderan,
+            'total_pendapatan' => $mingguan['total'] ?? 0,
+        ]);
     }
-    
 
     public function kelolaMenu()
     {
@@ -84,9 +84,8 @@ class PenjualController extends BaseController
         $id_penjual = $session->get('id_penjual');
         $request = $this->request;
 
-        // Kalau GET → tampilkan form edit
         if ($request->getMethod() === 'get') {
-            $id_menu = $request->getGet('id_menu'); // ambil dari URL ?id_menu=...
+            $id_menu = $request->getGet('id_menu');
 
             $menuModel = new \App\Models\MenuModel();
             $menu = $menuModel->getMenu($id_menu);
@@ -101,7 +100,6 @@ class PenjualController extends BaseController
             ]);
         }
 
-        // Kalau POST → proses simpan perubahan
         if ($request->getMethod() === 'post') {
             $id_menu = $request->getPost('id_menu');
             $nama_menu = $request->getPost('nama');
@@ -120,7 +118,6 @@ class PenjualController extends BaseController
                 'harga' => $harga
             ];
 
-            // Jika user upload gambar baru
             if ($gambar->isValid() && !$gambar->hasMoved()) {
                 $namaBaru = $gambar->getRandomName();
                 $gambar->move('uploads/menu/', $namaBaru);
@@ -130,11 +127,6 @@ class PenjualController extends BaseController
             $menuModel->updateMenu($id_menu, $updateData);
             return redirect()->to('/penjual/kelola-menu')->with('success', 'Menu updated successfully!');
         }
-    }
-
-    public function prosesEditMenu()
-    {
-        // Logic edit menu
     }
 
     public function prosesHapusMenu($id_menu)
@@ -147,24 +139,20 @@ class PenjualController extends BaseController
         }
 
         $menuModel = new \App\Models\MenuModel();
-
-        // Cek apakah menu milik penjual
         $menu = $menuModel->find($id_menu);
+
         if (!$menu || $menu['id_penjual'] != $id_penjual) {
             return redirect()->to('/penjual/kelola-menu')->with('error', 'hapus');
         }
 
-        // Hapus file gambar jika ada
         if (!empty($menu['gambar']) && file_exists(FCPATH . $menu['gambar'])) {
             unlink(FCPATH . $menu['gambar']);
         }
 
-        // Hapus data menu dari database
         $menuModel->delete($id_menu);
 
         return redirect()->to('/penjual/kelola-menu')->with('success', 'hapus');
     }
-
 
     public function kelolaKantin()
     {
@@ -183,6 +171,7 @@ class PenjualController extends BaseController
             'fakultas' => $fakultas,
         ]);
     }
+
 
     public function laporanPenjualan()
     {
@@ -278,9 +267,9 @@ class PenjualController extends BaseController
         $penjualModel = new PenjualModel();
 
         $riwayatModel->where('order_id', $order_id)
-                    ->where('menu', $menu)
-                    ->set(['status' => $status, 'tanggal' => date('Y-m-d H:i:s')])
-                    ->update();
+                                ->where('menu', $menu)
+                                ->set(['status' => $status, 'tanggal' => date('Y-m-d H:i:s')])
+                                ->update();
 
         if ($status === 'Done') {
             $riwayatModel->where('order_id', $order_id)
@@ -378,9 +367,8 @@ class PenjualController extends BaseController
             return redirect()->back()->with('error', 'Please fill in all fields!');
         }
 
-        // Upload gambar
         $gambarName = $gambar->getRandomName();
-        $gambar->move('uploads/menu', $gambarName); // Folder: public/uploads/menu
+        $gambar->move('uploads/menu', $gambarName);
 
         $menuModel->tambahMenu([
             'id_penjual' => $id_penjual,
@@ -391,7 +379,6 @@ class PenjualController extends BaseController
 
         return redirect()->to(base_url('penjual/kelola-menu'))->with('success', 'Menu added successfully!');
     }
-
     public function prosesKelolaKantin()
     {
         $request = $this->request;
@@ -405,7 +392,6 @@ class PenjualController extends BaseController
             'link' => $request->getPost('link')
         ];
 
-        // Jika ada gambar baru
         $gambar = $this->request->getFile('foto_kantin');
         if ($gambar && $gambar->isValid() && !$gambar->hasMoved()) {
             $namaBaru = $gambar->getRandomName();
@@ -417,7 +403,4 @@ class PenjualController extends BaseController
 
         return redirect()->to(base_url('penjual/kelola-kantin'))->with('success', 'Changes saved successfully!');
     }
-
-    
-
 }

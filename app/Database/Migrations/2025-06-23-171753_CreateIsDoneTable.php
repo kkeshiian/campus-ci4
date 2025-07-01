@@ -18,14 +18,27 @@ class CreateIsDoneTable extends Migration
                 'type'       => 'VARCHAR',
                 'constraint' => 255
             ],
+            'id_user' => [
+                'type'     => 'INT',
+                'unsigned' => true
+            ],
             'id_penjual' => [
                 'type'     => 'INT',
                 'unsigned' => true
             ],
-            'status' => [
-                'type'       => 'ENUM',
-                'constraint' => ['pending', 'done'],
-                'default'    => 'pending'
+            'nomor_wa' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 25  // Sesuaikan dengan tabel user
+            ],
+            'menu' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 255
+            ],
+            'is_sent' => [
+                'type'       => 'TINYINT',
+                'constraint' => 1,
+                'default'    => 0,
+                'unsigned'   => true
             ],
             'tanggal' => [
                 'type' => 'DATETIME'
@@ -33,7 +46,11 @@ class CreateIsDoneTable extends Migration
         ]);
 
         $this->forge->addKey('id_done', true);
-        $this->forge->addForeignKey('id_penjual', 'penjual', 'id_penjual', 'CASCADE', 'CASCADE');
+        
+        // Tambah foreign key dengan hati-hati
+        $this->forge->addForeignKey('id_user', 'user', 'id_user', 'RESTRICT', 'CASCADE');
+        $this->forge->addForeignKey('id_penjual', 'penjual', 'id_penjual', 'RESTRICT', 'CASCADE');
+        
         $this->forge->createTable('is_done');
     }
 
