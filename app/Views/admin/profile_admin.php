@@ -1,5 +1,3 @@
-<?= view('partial/navbar-admin') ?>
-
 <!DOCTYPE html>
 <html data-theme="light" class="bg-background">
 <head>
@@ -24,41 +22,52 @@
 
 </head>
 <body>
-  <div class="p-6">
-    <h1 class="text-2xl font-bold mb-4">Edit Profil Admin</h1>
+  <?= view('partial/navbar-admin') ?>
+  <div class="p-6 max-w-xl mx-auto">
+  <h1 class="text-2xl font-bold mb-6 text-gray-800">Edit Profil Admin</h1>
 
-    <form action="<?= base_url('admin/profile') ?>" method="post" class="space-y-4">
-      <input type="hidden" name="id_admin" value="<?= esc($admin['id_admin']) ?>" />
+  <form action="<?= base_url('admin/profile') ?>" method="post" class="space-y-5">
+    <!-- ID tersembunyi -->
+    <input type="hidden" name="id_admin" value="<?= esc($admin['id_admin']) ?>" />
 
-      <div>
-        <label for="nama" class="block font-semibold mb-1">Nama Admin</label>
-        <input
-          type="text"
-          id="nama"
-          name="nama"
-          value="<?= esc($admin['nama']) ?>"
-          class="input input-bordered w-full"
-          required
-        />
-      </div>
+    <!-- Input Nama -->
+    <div>
+      <label for="nama" class="block text-sm font-semibold text-gray-700 mb-1">Nama Admin</label>
+      <input
+        type="text"
+        id="nama"
+        name="nama"
+        value="<?= esc($admin['nama']) ?>"
+        required
+        class="input input-bordered w-full"
+      />
+    </div>
 
-      <div>
-        <label for="jabatan" class="block font-semibold mb-1">Jabatan</label>
-        <input
-          type="text"
-          id="jabatan"
-          name="jabatan"
-          value="<?= esc($admin['jabatan']) ?>"
-          class="input input-bordered w-full"
-          required
-        />
-      </div>
+    <!-- Input Jabatan -->
+    <div>
+      <label for="jabatan" class="block text-sm font-semibold text-gray-700 mb-1">Jabatan</label>
+      <input
+        type="text"
+        id="jabatan"
+        name="jabatan"
+        value="<?= esc($admin['jabatan']) ?>"
+        required
+        class="input input-bordered w-full"
+      />
+    </div>
 
-      <div class="pt-2">
-        <button type="submit" class="btn btn-primary w-full">Simpan Perubahan</button>
-      </div>
-    </form>
-  </div>
+    <!-- Tombol Submit -->
+    <div>
+      <button
+        type="submit"
+        class="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-2 px-4 rounded-md transition duration-200"
+      >
+        Simpan Perubahan
+      </button>
+    </div>
+  </form>
+</div>
+
 
   <script>
     const notyf = new Notyf({

@@ -1,7 +1,7 @@
 <?php $id_penjual = $id_penjual ?? null; ?>
 <?php $activePage = $activePage ?? 'dashboard_seller'; ?>
 
-<?= view('partial/navbar-penjual') ?>
+
 
 <!DOCTYPE html>
 <html data-theme="light" class="bg-background">
@@ -33,6 +33,9 @@
 </head>
 
 <body class="min-h-screen flex flex-col">
+
+<?= view('partial/navbar-penjual') ?>
+
 <main class="w-[90%] mx-auto mt-6">
   <h2 class="text-2xl font-bold mb-4" data-aos="fade-right" data-aos-duration="1000">Seller Dashboard</h2>
 
@@ -86,20 +89,29 @@
                 <input type="hidden" name="order_id" value="<?= esc($pesanan["order_id"]) ?>">
                 <input type="hidden" name="menu" value="<?= esc($pesanan["menu"]) ?>">
                 <fieldset class="mb-2">
-                  <?php $isDone = $pesanan["status"] === "Done"; ?>
-                  <label for="status" class="block text-sm font-semibold mb-1">Order Status</label>
-                  <select name="status" id="status" required class="select select-bordered w-full" <?= $isDone ? 'disabled' : '' ?>>
-                    <option value="">Waiting to Confirm</option>
-                    <?php
-                      $statuses = ["Being Cooked", "Ready to Pickup", "Done"];
-                      foreach ($statuses as $status) {
-                          $selected = ($pesanan["status"] == $status) ? "selected" : "";
-                          echo "<option value='$status' $selected>$status</option>";
-                      }
-                    ?>
-                  </select>
+                    <?php $isDone = $pesanan["status"] === "Done"; ?>
+                    
+                    <label for="status" class="block text-sm font-semibold mb-1">Order Status</label>
+                    
+                    <select 
+                        name="status" 
+                        id="status" 
+                        required 
+                        class="select select-bordered w-full border border-black p-2" 
+                        <?= $isDone ? 'disabled' : '' ?>
+                    >
+                        <option value="">Waiting to Confirm</option>
+                        <?php
+                            $statuses = ["Being Cooked", "Ready to Pickup", "Done"];
+                            foreach ($statuses as $status) {
+                                $selected = ($pesanan["status"] == $status) ? "selected" : "";
+                                echo "<option value='$status' $selected>$status</option>";
+                            }
+                        ?>
+                    </select>
                 </fieldset>
-                <button type="submit" name="submit" class="btn btn-sm w-full bg-kuning text-white rounded-lg mt-1 hover:bg-yellow-600" <?= $isDone ? 'disabled' : '' ?>>
+
+                <button type="submit" name="submit" class="btn btn-sm w-full bg-yellow-500 text-white rounded-lg mt-1 hover:bg-yellow-600" <?= $isDone ? 'disabled' : '' ?>>
                   Update
                 </button>
                 <?php if ($isDone): ?>
