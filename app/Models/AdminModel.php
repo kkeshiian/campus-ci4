@@ -8,7 +8,7 @@ class AdminModel extends Model
 {
     protected $table            = 'admin';
     protected $primaryKey       = 'id_admin';
-    protected $allowedFields    = ['id_user', 'nama', 'jabatan'];
+    protected $allowedFields    = ['id_user', 'jabatan'];
 
     public function updateInfo($id_admin, $data)
     {
@@ -25,11 +25,5 @@ class AdminModel extends Model
     {
         $penjualModel = new \App\Models\PenjualModel();
         return $penjualModel->delete($id_penjual);
-    }
-
-    public function hapusReport($id_report)
-    {
-        $reportModel = new \App\Models\ReportModel();
-        return $reportModel->delete($id_report);
     }
 }

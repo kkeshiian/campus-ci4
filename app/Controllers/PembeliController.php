@@ -7,8 +7,6 @@ use Dompdf\Dompdf;
 use Dompdf\Options;
 
 
-
-
 class PembeliController extends BaseController
 {
 
@@ -84,7 +82,6 @@ class PembeliController extends BaseController
         $query = $db->table('riwayat_pembelian')
             ->where('id_pembeli', $id_pembeli)
             ->orderBy('order_id')
-            ->orderBy('nama_kantin')
             ->orderBy('tanggal', 'DESC')
             ->get();
 
@@ -95,7 +92,6 @@ class PembeliController extends BaseController
             'riwayat' => $riwayat,
             'activePage' => 'history'
         ]);
-        return view('pembeli/history');
     }
 
     public function downloadInvoice($order_id)
@@ -212,23 +208,6 @@ class PembeliController extends BaseController
             'penjual' => $penjual,
             'menus' => $menus,
             'id_pembeli' => $id_pembeli
-        ]);
-        
-        $db = \Config\Database::connect();
-
-        $id_kantin = $this->request->getGet('id_kantin');
-        $id_pembeli = $this->request->getGet('id_pembeli');
-
-        $penjualQuery = $db->query("SELECT id_penjual, nama_kantin, gambar, link FROM penjual WHERE id_penjual = ?", [$id_kantin]);
-        $penjual = $penjualQuery->getRowArray();
-
-        $menuQuery = $db->query("SELECT * FROM menu WHERE id_penjual = ?", [$id_kantin]);
-        $menus = $menuQuery->getResultArray(); // array berisi banyak menu
-
-        return view('pembeli/menu', [
-            'penjual' => $penjual,
-            'menus' => $menus,
-            'id_per_pembeli' => $id_pembeli
         ]);
     }
 

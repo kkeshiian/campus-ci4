@@ -19,11 +19,15 @@ class AdminController extends BaseController
             return redirect()->to('/auth/logout');
         }
 
-        $adminModel = new \App\Models\AdminModel();
+        $adminModel = new AdminModel();
         $db = \Config\Database::connect();
 
-        // Data admin
-        $admin = $adminModel->find($id_admin);
+        // Data admin (ambil data user lewat join, karena field nama sudah tidak ada di tabel admin)
+        $admin = $adminModel
+            ->select('admin.*, user.nama, user.username')
+            ->join('user', 'user.id_user = admin.id_user')
+            ->where('admin.id_admin', $id_admin)
+            ->first();
 
         // Query role count
         $builder = $db->table('user');
@@ -47,36 +51,27 @@ class AdminController extends BaseController
             'roleCounts' => $roleCounts,
         ]);
     }
+
     public function hapusPembeli($id_user, $id_admin)
     {
         $session = session();
-
-        // Validasi login dan peran admin
         if (!$session->get('id_admin') || $session->get('id_admin') != $id_admin) {
             return redirect()->to('/auth/login');
         }
 
-        $userModel = new \App\Models\UserModel();
-        $pembeliModel = new \App\Models\PembeliModel();
-
-        // Hapus dari tabel pembeli berdasarkan id_user
-        $pembeliModel->where('id_user', $id_user)->delete();
-
-        // Hapus dari tabel user
+        $userModel = new UserModel();
         $userModel->delete($id_user);
 
         return redirect()->to("/admin/kelola-pengguna?id_admin=$id_admin")->with('success', 'hapus');
     }
 
-
-
     public function hapusKantin($id_user, $id_admin)
     {
-        $userModel = new \App\Models\UserModel();
-        $penjualModel = new \App\Models\PenjualModel();
+        $userModel = new UserModel();
+        $penjualModel = new PenjualModel();
 
         $penjualModel->where('id_user', $id_user)->delete();
-        $userModel->delete($id_user); // 
+        $userModel->delete($id_user);
 
         return redirect()->to('/admin/kelola-kantin?success=hapus');
     }
@@ -90,8 +85,7 @@ class AdminController extends BaseController
             return redirect()->to('/auth/logout');
         }
 
-        $userModel = new \App\Models\UserModel();
-
+        $userModel = new UserModel();
         $pembeliList = $userModel->where('Role', 'pembeli')->findAll();
 
         return view('admin/kelola_pengguna', [
@@ -114,7 +108,6 @@ class AdminController extends BaseController
                             JOIN penjual p ON u.id_user = p.id_user 
                             JOIN fakultas f ON p.id_fakultas = f.id_fakultas 
                             WHERE u.role = 'penjual'");
-                            
         $penjualList = $query->getResultArray();
 
         return view('admin/kelola_kantin', [
@@ -131,8 +124,12 @@ class AdminController extends BaseController
             return redirect()->to(base_url('admin/dashboard'));
         }
 
-        $adminModel = new \App\Models\AdminModel();
-        $admin = $adminModel->find($id_admin);
+        $adminModel = new AdminModel();
+        $admin = $adminModel
+            ->select('admin.*, user.nama')
+            ->join('user', 'user.id_user = admin.id_user')
+            ->where('id_admin', $id_admin)
+            ->first();
 
         if (!$admin) {
             return redirect()->to(base_url('admin/dashboard'))->with('error', 'Admin not found');
@@ -141,17 +138,14 @@ class AdminController extends BaseController
         return view('admin/profile_admin', ['admin' => $admin]);
     }
 
-
     public function updateProfile()
     {
         $id_admin = session()->get('id_admin');
-        $nama = trim($this->request->getPost('nama'));
         $jabatan = trim($this->request->getPost('jabatan'));
 
-        if ($nama !== '' && $jabatan !== '') {
-            $adminModel = new \App\Models\AdminModel();
-            $adminModel->updateInfo($id_admin, [
-                'nama' => $nama,
+        if ($jabatan !== '') {
+            $adminModel = new AdminModel();
+            $adminModel->update($id_admin, [
                 'jabatan' => $jabatan
             ]);
 
@@ -161,69 +155,10 @@ class AdminController extends BaseController
         }
     }
 
-
     public function registerPenjual()
     {
         return view('admin/register_penjual');
     }
-
-    public function editDataPembeli($id_pembeli)
-    {
-        $id_admin = session('id_admin');
-        if (!$id_admin) return redirect()->to('/auth/login');
-
-        $userModel = new \App\Models\UserModel();
-        $pembeli = $userModel->find($id_pembeli);
-
-        if (!$pembeli) {
-            return redirect()->to('/admin/kelola_pengguna')->with('error', 'Pembeli tidak ditemukan');
-        }
-
-        // Tambahkan ini
-        $adminModel = new \App\Models\AdminModel();
-        $admin = $adminModel->find($id_admin);
-
-        return view('admin/edit-data-pembeli', [
-            'pembeli' => $pembeli,
-            'id_admin' => $id_admin,
-            'admin' => $admin,
-        ]);
-    }
-
-
-    public function updateDataPembeli($id_pembeli)
-    {
-        $id_admin = session('id_admin');
-        $nama_admin = $this->request->getPost('nama');
-        $password_admin = $this->request->getPost('password');
-
-        $username_user = $this->request->getPost('username');
-        $new_password = $this->request->getPost('new_password');
-
-        $adminModel = new \App\Models\AdminModel();
-        $admin = $adminModel->find($id_admin);
-
-        if (!$admin) {
-            return redirect()->back()->with('error', 'Data admin tidak ditemukan');
-        }
-
-        $userModel = new \App\Models\UserModel();
-        $admin_user = $userModel->find($admin['id_user']);
-
-        if (!password_verify($password_admin, $admin_user['password'])) {
-            return redirect()->back()->with('error', 'Password admin salah');
-        }
-
-        $data_update = [
-            'username' => $username_user,
-            'password' => password_hash($new_password, PASSWORD_DEFAULT)
-        ];
-
-        $userModel->update($id_pembeli, $data_update);
-
-        return redirect()->to('/admin/kelola_pengguna')->with('success', 'Password berhasil diubah');
-    }
-
 
     public function editDataPenjual($id_penjual, $id_admin)
     {
@@ -283,7 +218,6 @@ class AdminController extends BaseController
         ]);
     }
 
-
     public function tambahKantin($id_admin)
     {
         $fakultasModel = new FakultasModel();
@@ -292,6 +226,29 @@ class AdminController extends BaseController
         return view('admin/tambah_kantin', [
             'id_admin' => $id_admin,
             'fakultasList' => $fakultasList,
+        ]);
+    }
+
+    public function editDataPembeli($id_pembeli)
+    {
+        $id_admin = session('id_admin');
+        if (!$id_admin) return redirect()->to('/auth/login');
+
+        $userModel = new \App\Models\UserModel();
+        $pembeli = $userModel->find($id_pembeli);
+
+        if (!$pembeli) {
+            return redirect()->to('/admin/kelola_pengguna')->with('error', 'Pembeli tidak ditemukan');
+        }
+
+        // Tambahkan ini
+        $adminModel = new \App\Models\AdminModel();
+        $admin = $adminModel->find($id_admin);
+
+        return view('admin/edit-data-pembeli', [
+            'pembeli' => $pembeli,
+            'id_admin' => $id_admin,
+            'admin' => $admin,
         ]);
     }
 
@@ -306,7 +263,6 @@ class AdminController extends BaseController
         $password = $this->request->getPost('password');
         $konfirmasi = $this->request->getPost('konfirmasi_password');
 
-        // Validasi password
         if ($password !== $konfirmasi) {
             return redirect()->back()->withInput()->with('error', 'Konfirmasi password tidak cocok.');
         }
@@ -315,7 +271,6 @@ class AdminController extends BaseController
             return redirect()->back()->withInput()->with('error', 'Password harus minimal 8 karakter dan mengandung huruf besar, kecil, angka, dan simbol.');
         }
 
-        // Simpan user baru
         $userModel = new UserModel();
         $penjualModel = new PenjualModel();
 

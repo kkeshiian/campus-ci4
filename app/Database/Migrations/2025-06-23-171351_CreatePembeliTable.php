@@ -22,11 +22,6 @@ class CreatePembeliTable extends Migration
                 'type'       => 'VARCHAR',
                 'constraint' => 255
             ],
-            'gambar' => [
-                'type'       => 'VARCHAR',
-                'constraint' => 255,
-                'null'       => true
-            ]
         ]);
 
         $this->forge->addKey('id_pembeli', true);
