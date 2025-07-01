@@ -1,5 +1,3 @@
-<?= view('partial/navbar-penjual') ?>
-
 <!DOCTYPE html>
 <html data-theme="light" class="bg-background">
 <head>
@@ -27,6 +25,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css" />
 </head>
 <body class="min-h-screen flex flex-col">
+  <?= view('partial/navbar-penjual') ?>
 <main class="w-[90%] mx-auto mt-6 max-w-xl mb-4">
   <h2 class="text-2xl font-bold mb-4 text-center">Edit Menu</h2>
 

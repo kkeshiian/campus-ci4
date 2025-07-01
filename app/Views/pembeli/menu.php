@@ -36,35 +36,53 @@ $linkKantin = $penjual['link'] ?? '';
 
 <?= view('partial/navbar-pembeli') ?>
 
-<div class="flex w-full max-w-md mx-6 md:mx-auto m-6 p-4 border border-black rounded-xl shadow-sm bg-white"
+<div class="flex w-full max-w-sm sm:max-w-md mx-4 sm:mx-6 md:mx-auto m-4 sm:m-6 p-3 sm:p-4 border border-black rounded-xl shadow-sm bg-white"
 data-aos="fade-down" data-aos-duration="1000">
-   <div class="mx-auto flex items-center gap-6">
+   <div class="mx-auto flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full">
         <!-- Bagian kiri: gambar -->
         <?php
             $gambarKantin = !empty($penjual['gambar']) ? $penjual['gambar'] : '../../assets/img/default-canteen.jpg';
         ?>
-
-        <div class="w-64">
-            <img src="../../assets/<?= $gambarKantin ?>" 
+       <!-- Container fleksibel horizontal -->
+<div class="flex flex-row items-center gap-3 sm:gap-4 md:gap-6 w-full">
+    
+    <!-- Container fleksibel horizontal -->
+    <div class="flex flex-row items-center gap-4 w-full">
+        
+        <!-- Bagian gambar - ukuran tetap -->
+        <div class="w-40 flex-shrink-0">
+            <img 
+                src="../../assets/<?= htmlspecialchars($gambarKantin) ?>" 
                 alt="Gambar Kantin <?= htmlspecialchars($kantin) ?>" 
-                class="rounded-lg object-cover w-full h-32 md:h-40" />
+                class="w-full h-32 object-cover rounded-lg shadow-sm" 
+            />
         </div>
 
+        <!-- Bagian kanan -->
+        <div class="flex-1 flex flex-col justify-center space-y-2 overflow-hidden">
+            
+            <!-- Nama kantin -->
+            <h2 class="text-black text-lg font-bold leading-tight break-words">
+                <?= htmlspecialchars($kantin) ?>
+            </h2>
 
-        <!-- Bagian kanan: nama kantin dan tombol -->
-        <div class="w-2/3 flex flex-col justify-center">
-            <div class="text-black text-2xl font-bold mb-2"><?= $kantin ?></div>
-
-            <a href="<?= $linkKantin ?>" target="_blank"
-                class="inline-block bg-kuning text-black px-4 py-2 rounded-md hover:bg-yellow-600 transition duration-200 w-max text-base">
+            <!-- Tombol arah -->
+            <a 
+                href="<?= htmlspecialchars($linkKantin) ?>" 
+                target="_blank"
+                class="inline-block bg-yellow-500 hover:bg-yellow-600 text-black text-sm font-medium px-4 py-2 rounded-md transition duration-200 w-fit max-w-full"
+            >
                 Direction to Canteen
             </a>
         </div>
+    </div>
+</div>
+
    </div>
 </div>
 
 <!-- Tempat menampilkan menu -->
-<div id="card-container" class="flex-grow grid grid-cols-2 md:grid-cols-5 gap-4 w-[90%] mx-auto mb-8" data-aos="fade-up" data-aos-duration="1000">
+<div id="card-container" class="flex-grow grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-4 w-[95%] sm:w-[90%] mx-auto mb-8" data-aos="fade-up" data-aos-duration="1000">
     <?php if (!empty($menus)): ?>
         <?php foreach ($menus as $row_menu): ?>
             <?php
@@ -73,16 +91,16 @@ data-aos="fade-down" data-aos-duration="1000">
                 $gambar = htmlspecialchars($row_menu['gambar'] ?? '../../assets/img/default-menu.jpg');
             ?>
             <div class="flex flex-col justify-between bg-white rounded-lg shadow-lg border border-black">
-                <div class="p-4">
-                    <img src="/campuseats/public/../../<?= htmlspecialchars($gambar) ?>" alt="<?= $nama ?>" class="rounded-t-lg w-full h-48 object-cover mb-1" />
+                <div class="p-2 sm:p-4">
+                    <img src="/campuseats/public/../../<?= htmlspecialchars($gambar) ?>" alt="<?= $nama ?>" class="rounded-t-lg w-full h-32 sm:h-40 md:h-48 object-cover mb-1" />
                     <div>
-                        <h2 class="text-xl font-semibold"><?= $nama ?></h2>
-                        <p class="text-gray-600">Rp <?= number_format($harga, 0, ',', '.') ?></p>
+                        <h2 class="text-sm sm:text-lg md:text-xl font-semibold leading-tight mb-1"><?= $nama ?></h2>
+                        <p class="text-xs sm:text-sm md:text-base text-gray-600">Rp <?= number_format($harga, 0, ',', '.') ?></p>
                     </div>
                 </div>
-                <div class="p-4">
+                <div class="p-2 sm:p-4">
                     <button
-                        class="btn bg-kuning text-sm text-black rounded-lg px-4 py-2 hover:bg-yellow-600 w-full text-center add-to-cart"
+                        class="btn bg-yellow-500 text-xs sm:text-sm text-black rounded-lg px-2 sm:px-4 py-1 sm:py-2 hover:bg-yellow-600 w-full text-center add-to-cart"
                         data-nama="<?= $nama ?>"
                         data-harga="<?= $harga ?>"
                         data-gambar="<?= $gambar ?>"

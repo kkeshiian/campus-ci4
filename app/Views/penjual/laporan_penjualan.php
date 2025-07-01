@@ -1,4 +1,3 @@
-<?= view('partial/navbar-penjual') ?>
 <!DOCTYPE html>
 <html data-theme="light" class="bg-background">
 <head>
@@ -27,6 +26,7 @@
 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 </head>
 <body class="min-h-screen flex flex-col">
+  <?= view('partial/navbar-penjual') ?>
 
 <main class="w-[90%] mx-auto mt-6 flex-grow max-w-6xl">
   <h2 class="text-2xl font-bold mb-4" data-aos="fade-right" data-aos-duration="1000">Weekly Sales Report</h2>

@@ -1,6 +1,5 @@
 <?php $id_admin = $id_admin ?? null; ?>
 <?php $activePage = $activePage ?? 'dashboard'; ?>
-<?= view('partial/navbar-admin') ?>
 
 <!DOCTYPE html>
 <html data-theme="light" class="bg-background">
@@ -27,6 +26,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css" />
   </head>
   <body class="min-h-screen flex flex-col">
+    <?= view('partial/navbar-admin') ?>
         <main class="w-[90%] mx-auto mt-6 max-w-xl">
         <h2 class="text-2xl font-bold mb-4 text-center">Add New Canteen</h2>
 

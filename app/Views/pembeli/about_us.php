@@ -1,9 +1,6 @@
 <?php $id_pembeli = $id_pembeli ?? null; ?>
 <?php $activePage = $activePage ?? 'about_us'; ?>
 
-<?= view('partial/navbar-pembeli') ?>
-
-
 <!DOCTYPE html>
 <html data-theme="light" class="bg-background min-h-screen">
 <head>
@@ -28,6 +25,7 @@
 </head>
 <body class="flex flex-col min-h-screen">
 
+<?= view('partial/navbar-pembeli') ?>
 
 <main class="flex-grow container mx-auto px-4">
   <h1 class="text-2xl font-bold mb-6 text-center text-black m-4" data-aos="fade-up" data-aos-duration="1000">Development Team</h1>

@@ -1,8 +1,6 @@
 <?php $id_pembeli = $id_pembeli ?? null; ?>
 <?php $activePage = $activePage ?? 'cart'; ?>
 
-<?= view('partial/navbar-pembeli') ?>
-
 <!DOCTYPE html>
 <html data-theme="light" class="bg-background">
 <head>
@@ -27,7 +25,7 @@
   <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-eQfKe1LFpAFOWEcr"></script>
 </head>
 <body class="min-h-screen flex flex-col overflow-y-auto">
-
+  <?= view('partial/navbar-pembeli') ?>
 
   <div class="w-full max-w-4xl mx-auto m-4" data-aos="fade-up" data-aos-duration="1000">
     <h1 class="text-2xl font-bold mb-4 text-center">Your Cart</h1>

@@ -1,8 +1,6 @@
 <?php $id_pembeli = $id_pembeli ?? null; ?>
 <?php $activePage = $activePage ?? 'cart'; ?>
 
-<?= view('partial/navbar-pembeli') ?>
-
 <!DOCTYPE html>
 <html data-theme="light" class="bg-background">
 <head>
@@ -26,6 +24,7 @@
 
 </head>
 <body class="min-h-screen flex flex-col">
+  <?= view('partial/navbar-pembeli') ?>
 
   <h2 class="text-2xl font-bold mx-auto m-4" data-aos="fade-up" data-aos-duration="1000">Purchase History</h2>
 
@@ -57,8 +56,9 @@
                 <td>
                   <?= esc($item['order_id']) ?>
                   <?php if ($item['status_pembayaran'] === 'paid'): ?>
-                      <a href="<?= base_url('pembeli/invoice-pdf/' . $item['order_id']) ?>" class="btn btn-sm btn-primary">
-                          Download Invoice
+                      <a href="<?= base_url('pembeli/invoice-pdf/' . $item['order_id']) ?>" 
+                        class="underline decoration-yellow-500 text-yellow-500 hover:text-yellow-600 transition">
+                          <br> Download Invoice
                       </a>
                   <?php endif; ?>
                 </td>
